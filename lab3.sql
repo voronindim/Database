@@ -88,35 +88,35 @@ ON DELETE CASCADE
 
 
 ---- 1. INSERT ----
--- 1. Без указания списка полей
+-- 1. Р‘РµР· СѓРєР°Р·Р°РЅРёСЏ СЃРїРёСЃРєР° РїРѕР»РµР№
 INSERT INTO owner
-VALUES (N'Александр', N'Королев', N'TravelLine', N'562897');
-
-INSERT INTO owner
-VALUES (N'Михаил', N'Воробьев', N'iSpring', N'432615');
+VALUES (N'РђР»РµРєСЃР°РЅРґСЂ', N'РљРѕСЂРѕР»РµРІ', N'TravelLine', N'562897');
 
 INSERT INTO owner
-VALUES (N'Виктор', N'Маслов', N'OmegaR', N'731954');
+VALUES (N'РњРёС…Р°РёР»', N'Р’РѕСЂРѕР±СЊРµРІ', N'iSpring', N'432615');
+
+INSERT INTO owner
+VALUES (N'Р’РёРєС‚РѕСЂ', N'РњР°СЃР»РѕРІ', N'OmegaR', N'731954');
 
 INSERT INTO flat
-VALUES (1, N'Пушкина', N'8А', N'121', 100)
+VALUES (1, N'РџСѓС€РєРёРЅР°', N'8Рђ', N'121', 100)
 
 INSERT INTO flat
-VALUES (1, N'Волкова', N'16', N'10Б', 60)
+VALUES (1, N'Р’РѕР»РєРѕРІР°', N'16', N'10Р‘', 60)
 
 INSERT INTO flat
-VALUES (1, N'Анциферова', N'82', N'36', 68)
+VALUES (1, N'РђРЅС†РёС„РµСЂРѕРІР°', N'82', N'36', 68)
 
 INSERT INTO flat
-VALUES (2, N'Пушкина', N'10', N'14', 50)
+VALUES (2, N'РџСѓС€РєРёРЅР°', N'10', N'14', 50)
 
 INSERT INTO service
-VALUES (N'Вода', N'Водоканал')
+VALUES (N'Р’РѕРґР°', N'Р’РѕРґРѕРєР°РЅР°Р»')
 
 
--- 2. С указанием списка полей
+-- 2. РЎ СѓРєР°Р·Р°РЅРёРµРј СЃРїРёСЃРєР° РїРѕР»РµР№
 INSERT INTO flat (street, house_number, flat_number, area, id_owner)
-VALUES (N'Строителей', N'24', N'9', 72, 2)
+VALUES (N'РЎС‚СЂРѕРёС‚РµР»РµР№', N'24', N'9', 72, 2)
 
 INSERT INTO service_in_flat (id_service, id_flat, start_date, end_date)
 VALUES (1, 2, N'2015-10-15', NULL)
@@ -127,86 +127,86 @@ VALUES (1, 1, N'2018-04-12', NULL)
 INSERT INTO service_in_flat (id_service, id_flat, start_date, end_date)
 VALUES (1, 3, N'2010-11-12', N'2014-11-12')
 
--- 3. С чтением значения из другой таблицы
+-- 3. РЎ С‡С‚РµРЅРёРµРј Р·РЅР°С‡РµРЅРёСЏ РёР· РґСЂСѓРіРѕР№ С‚Р°Р±Р»РёС†С‹
 INSERT INTO service (name, company)
 SELECT first_name, place_of_work FROM owner
 
 
 ---- 2. DELETE ----
--- 1. Всех записей
+-- 1. Р’СЃРµС… Р·Р°РїРёСЃРµР№
 DELETE service
 
--- 2. По условию
+-- 2. РџРѕ СѓСЃР»РѕРІРёСЋ
 DELETE flat
 WHERE 
-	street = N'Пушкина';
+	street = N'РџСѓС€РєРёРЅР°';
 
--- 3. Очистить таблицу
+-- 3. РћС‡РёСЃС‚РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ
 TRUNCATE TABLE service_in_flat
 
 
 ---- 3. UPDATE ----
--- 1. Всех записей
+-- 1. Р’СЃРµС… Р·Р°РїРёСЃРµР№
 UPDATE owner
 SET place_of_work = N'Google'
 
--- 2. По условию обновляя один атрибут
+-- 2. РџРѕ СѓСЃР»РѕРІРёСЋ РѕР±РЅРѕРІР»СЏСЏ РѕРґРёРЅ Р°С‚СЂРёР±СѓС‚
 UPDATE owner
-SET  first_name = N'Алексей'
-WHERE last_name = N'Королев';
+SET  first_name = N'РђР»РµРєСЃРµР№'
+WHERE last_name = N'РљРѕСЂРѕР»РµРІ';
 
--- 3. По условию обновляя несколько атрибутов
+-- 3. РџРѕ СѓСЃР»РѕРІРёСЋ РѕР±РЅРѕРІР»СЏСЏ РЅРµСЃРєРѕР»СЊРєРѕ Р°С‚СЂРёР±СѓС‚РѕРІ
 UPDATE flat 
 SET area += 10
 WHERE id_owner = 1;
 
 
 ---- 4. SELECT ----
--- 1. С определенным набором извлекаемых атрибутов 
+-- 1. РЎ РѕРїСЂРµРґРµР»РµРЅРЅС‹Рј РЅР°Р±РѕСЂРѕРј РёР·РІР»РµРєР°РµРјС‹С… Р°С‚СЂРёР±СѓС‚РѕРІ 
 SELECT first_name, last_name FROM owner
 
--- 2. Со всеми атрибутами (SELECT * FROM...)
+-- 2. РЎРѕ РІСЃРµРјРё Р°С‚СЂРёР±СѓС‚Р°РјРё (SELECT * FROM...)
 SELECT * FROM flat
 
--- 3. С условием по атрибуту (SELECT * FROM ... WHERE atr1 = "")
+-- 3. РЎ СѓСЃР»РѕРІРёРµРј РїРѕ Р°С‚СЂРёР±СѓС‚Сѓ (SELECT * FROM ... WHERE atr1 = "")
 SELECT * FROM flat
 WHERE area < 80
 
 
 ---- 5. SELECT ORDER BY + TOP (LIMIT) ----
--- 1. С сортировкой по возрастанию ASC + ограничение вывода количества записей
+-- 1. РЎ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ ASC + РѕРіСЂР°РЅРёС‡РµРЅРёРµ РІС‹РІРѕРґР° РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РїРёСЃРµР№
 SELECT TOP 3 *
 FROM flat
 ORDER BY street ASC
 
--- 2. С сортировкой по убыванию DESC
+-- 2. РЎ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№ РїРѕ СѓР±С‹РІР°РЅРёСЋ DESC
 SELECT * 
 FROM flat
 ORDER BY area DESC
 
--- 3. С сортировкой по двум атрибутам + ограничение вывода количества записей
+-- 3. РЎ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№ РїРѕ РґРІСѓРј Р°С‚СЂРёР±СѓС‚Р°Рј + РѕРіСЂР°РЅРёС‡РµРЅРёРµ РІС‹РІРѕРґР° РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РїРёСЃРµР№
 SELECT TOP 4 * 
 FROM flat
 ORDER BY street, area
 
--- 4. С сортировкой по первому атрибуту, из списка извлекаемых
+-- 4. РЎ СЃРѕСЂС‚РёСЂРѕРІРєРѕР№ РїРѕ РїРµСЂРІРѕРјСѓ Р°С‚СЂРёР±СѓС‚Сѓ, РёР· СЃРїРёСЃРєР° РёР·РІР»РµРєР°РµРјС‹С…
 SELECT street, house_number, area
 FROM flat
 ORDER BY 1
 
 
----- 6. Работа с датами. ----
--- 1. WHERE по дате
+---- 6. Р Р°Р±РѕС‚Р° СЃ РґР°С‚Р°РјРё. ----
+-- 1. WHERE РїРѕ РґР°С‚Рµ
 SELECT *
 FROM service_in_flat
 WHERE start_date > N'2015-01-01'
 
--- 2. Извлечь из таблицы не всю дату, а только год. 
+-- 2. РР·РІР»РµС‡СЊ РёР· С‚Р°Р±Р»РёС†С‹ РЅРµ РІСЃСЋ РґР°С‚Сѓ, Р° С‚РѕР»СЊРєРѕ РіРѕРґ. 
 SELECT id_service, id_flat, YEAR(start_date) AS start_date
 FROM service_in_flat
 
 
----- 7. SELECT GROUP BY с функциями агрегации ----
+---- 7. SELECT GROUP BY СЃ С„СѓРЅРєС†РёСЏРјРё Р°РіСЂРµРіР°С†РёРё ----
 -- 1. MIN
 SELECT id_owner, MIN(area) AS area
 FROM flat
@@ -234,7 +234,7 @@ GROUP BY id_owner
 
 
 ---- 8. SELECT GROUP BY + HAVING ----
--- 1. Написать 3 разных запроса с использованием GROUP BY + HAVING
+-- 1. РќР°РїРёСЃР°С‚СЊ 3 СЂР°Р·РЅС‹С… Р·Р°РїСЂРѕСЃР° СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј GROUP BY + HAVING
 SELECT id_owner, MAX(area) AS area
 FROM flat
 GROUP BY id_owner
@@ -252,35 +252,35 @@ HAVING AVG(area) > 60
 
 
 ---- 9. SELECT JOIN ----
--- 1. LEFT JOIN двух таблиц и WHERE по одному из атрибутов
+-- 1. LEFT JOIN РґРІСѓС… С‚Р°Р±Р»РёС† Рё WHERE РїРѕ РѕРґРЅРѕРјСѓ РёР· Р°С‚СЂРёР±СѓС‚РѕРІ
 SELECT * FROM flat
 LEFT JOIN owner ON flat.id_owner = owner.id_owner
 WHERE flat.area > 50
 
--- 2. RIGHT JOIN. Получить такую же выборку, как и в 9.1
+-- 2. RIGHT JOIN. РџРѕР»СѓС‡РёС‚СЊ С‚Р°РєСѓСЋ Р¶Рµ РІС‹Р±РѕСЂРєСѓ, РєР°Рє Рё РІ 9.1
 SELECT * FROM owner
 RIGHT JOIN flat ON flat.id_owner = owner.id_owner
 WHERE flat.area > 50
 
--- 3. LEFT JOIN трех таблиц + WHERE по атрибуту из каждой таблицы
+-- 3. LEFT JOIN С‚СЂРµС… С‚Р°Р±Р»РёС† + WHERE РїРѕ Р°С‚СЂРёР±СѓС‚Сѓ РёР· РєР°Р¶РґРѕР№ С‚Р°Р±Р»РёС†С‹
 SELECT * FROM owner
 LEFT JOIN flat ON flat.id_owner = owner.id_owner
 LEFT JOIN service_in_flat ON service_in_flat.id_flat = flat.id_flat
 WHERE owner.place_of_work != N'OmegaR' AND flat.area > 60 AND service_in_flat.start_date > N'2015-01-01'
 
--- 4. FULL OUTER JOIN двух таблиц
+-- 4. FULL OUTER JOIN РґРІСѓС… С‚Р°Р±Р»РёС†
 SELECT * FROM 
 owner 
 FULL OUTER JOIN flat
 ON owner.id_owner = flat.id_owner
 
 
----- 10. Подзапросы ----
--- 1. Написать запрос с WHERE IN (подзапрос)
+---- 10. РџРѕРґР·Р°РїСЂРѕСЃС‹ ----
+-- 1. РќР°РїРёСЃР°С‚СЊ Р·Р°РїСЂРѕСЃ СЃ WHERE IN (РїРѕРґР·Р°РїСЂРѕСЃ)
 SELECT * FROM owner
 WHERE id_owner IN (SELECT id_owner FROM flat)
 
--- 2. Написать запрос SELECT atr1, atr2, (подзапрос) FROM ...
+-- 2. РќР°РїРёСЃР°С‚СЊ Р·Р°РїСЂРѕСЃ SELECT atr1, atr2, (РїРѕРґР·Р°РїСЂРѕСЃ) FROM ...
 SELECT 
 	first_name,
 	last_name,
