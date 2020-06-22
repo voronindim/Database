@@ -1,4 +1,4 @@
---1. Äîáàâèòü âíåøíèå êëþ÷è.
+--1. Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²Ð½ÐµÑˆÐ½Ð¸Ðµ ÐºÐ»ÑŽÑ‡Ð¸.
 ALTER TABLE booking
 ADD
 FOREIGN KEY(id_client) REFERENCES client(id_client)
@@ -20,7 +20,7 @@ ADD
 FOREIGN KEY(id_hotel) REFERENCES hotel(id_hotel)
 
 
---2. Âûäàòü èíôîðìàöèþ î êëèåíòàõ ãîñòèíèöû “Êîñìîñ”, ïðîæèâàþùèõ â íîìåðàõ êàòåãîðèè “Ëþêñ” íà 1 àïðåëÿ 2019ã.
+--2. Ð’Ñ‹Ð´Ð°Ñ‚ÑŒ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸ÑŽ Ð¾ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð°Ñ… Ð³Ð¾ÑÑ‚Ð¸Ð½Ð¸Ñ†Ñ‹ â€œÐšÐ¾ÑÐ¼Ð¾Ñâ€, Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°ÑŽÑ‰Ð¸Ñ… Ð² Ð½Ð¾Ð¼ÐµÑ€Ð°Ñ… ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¸ â€œÐ›ÑŽÐºÑâ€ Ð½Ð° 1 Ð°Ð¿Ñ€ÐµÐ»Ñ 2019Ð³.
 SELECT client.* FROM client
 	LEFT JOIN booking ON client.id_client = booking.id_client
 	LEFT JOIN room_in_booking ON room_in_booking.id_booking = booking.id_booking
@@ -28,11 +28,11 @@ SELECT client.* FROM client
 	LEFT JOIN room_category ON room_category.id_room_category = room.id_room_category
 	LEFT JOIN hotel ON hotel.id_hotel = room.id_hotel
 WHERE
-	hotel.name = N'Êîñìîñ' AND 
-	room_category.name = N'Ëþêñ' AND 
+	hotel.name = N'ÐšÐ¾ÑÐ¼Ð¾Ñ' AND 
+	room_category.name = N'Ð›ÑŽÐºÑ' AND 
 	(N'2019-04-01' >= room_in_booking.checkin_date AND N'2019-04-01' < room_in_booking.checkout_date);
 
--- 3. Äàòü ñïèñîê ñâîáîäíûõ íîìåðîâ âñåõ ãîñòèíèö íà 22 àïðåëÿ. 
+-- 3. Ð”Ð°Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐ¾Ðº ÑÐ²Ð¾Ð±Ð¾Ð´Ð½Ñ‹Ñ… Ð½Ð¾Ð¼ÐµÑ€Ð¾Ð² Ð²ÑÐµÑ… Ð³Ð¾ÑÑ‚Ð¸Ð½Ð¸Ñ† Ð½Ð° 22 Ð°Ð¿Ñ€ÐµÐ»Ñ. 
 SELECT room.* FROM room
 LEFT JOIN 
 	(SELECT id_room FROM room_in_booking 
@@ -42,19 +42,19 @@ ON room_in_booking.id_room = room.id_room
 WHERE room_in_booking.id_room IS NULL
 
 
--- 4. Äàòü êîëè÷åñòâî ïðîæèâàþùèõ â ãîñòèíèöå "Êîñìîñ" íà 23 ìàðòà ïî êàæäîé êàòåãîðèè íîìåðîâ	
+-- 4. Ð”Ð°Ñ‚ÑŒ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°ÑŽÑ‰Ð¸Ñ… Ð² Ð³Ð¾ÑÑ‚Ð¸Ð½Ð¸Ñ†Ðµ "ÐšÐ¾ÑÐ¼Ð¾Ñ" Ð½Ð° 23 Ð¼Ð°Ñ€Ñ‚Ð° Ð¿Ð¾ ÐºÐ°Ð¶Ð´Ð¾Ð¹ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¸ Ð½Ð¾Ð¼ÐµÑ€Ð¾Ð²	
 SELECT room_category.id_room_category, room_category.name, COUNT(*) 
 FROM room_category 
 	LEFT JOIN room ON room_category.id_room_category = room.id_room_category
 	LEFT JOIN hotel ON hotel.id_hotel = room.id_hotel
 	LEFT JOIN room_in_booking ON room.id_room = room_in_booking.id_room
 WHERE
-	hotel.name = N'Êîñìîñ' AND 
+	hotel.name = N'ÐšÐ¾ÑÐ¼Ð¾Ñ' AND 
 	(N'2019-03-23' >= room_in_booking.checkin_date AND N'2019-03-23' < room_in_booking.checkout_date)
 GROUP BY 
 	room_category.id_room_category, room_category.name
 
---5. Äàòü ñïèñîê ïîñëåäíèõ ïðîæèâàâøèõ êëèåíòîâ ïî âñåì êîìíàòàì ãîñòèíèöû “Êîñìîñ”, âûåõàâøèx â àïðåëå ñ óêàçàíèåì äàòû âûåçäà.
+--5. Ð”Ð°Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐ¾Ðº Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°Ð²ÑˆÐ¸Ñ… ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð¾Ð² Ð¿Ð¾ Ð²ÑÐµÐ¼ ÐºÐ¾Ð¼Ð½Ð°Ñ‚Ð°Ð¼ Ð³Ð¾ÑÑ‚Ð¸Ð½Ð¸Ñ†Ñ‹ â€œÐšÐ¾ÑÐ¼Ð¾Ñâ€, Ð²Ñ‹ÐµÑ…Ð°Ð²ÑˆÐ¸x Ð² Ð°Ð¿Ñ€ÐµÐ»Ðµ Ñ ÑƒÐºÐ°Ð·Ð°Ð½Ð¸ÐµÐ¼ Ð´Ð°Ñ‚Ñ‹ Ð²Ñ‹ÐµÐ·Ð´Ð°.
 SELECT client.*, room.id_room, room_in_booking.checkout_date
 FROM client
 	INNER JOIN booking ON client.id_client = booking.id_client
@@ -70,9 +70,9 @@ FROM client
 				ON b.id_room =  room_in_booking.id_room
 WHERE 
 	b.last_checkout_date = room_in_booking.checkout_date AND 
-	hotel.name = N'Êîñìîñ'
+	hotel.name = N'ÐšÐ¾ÑÐ¼Ð¾Ñ'
 
---6. Ïðîäëèòü íà 2 äíÿ äàòó ïðîæèâàíèÿ â ãîñòèíèöå “Êîñìîñ” âñåì êëèåíòàì êîìíàò êàòåãîðèè “Áèçíåñ”, êîòîðûå çàñåëèëèñü 10 ìàÿ.
+--6. ÐŸÑ€Ð¾Ð´Ð»Ð¸Ñ‚ÑŒ Ð½Ð° 2 Ð´Ð½Ñ Ð´Ð°Ñ‚Ñƒ Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°Ð½Ð¸Ñ Ð² Ð³Ð¾ÑÑ‚Ð¸Ð½Ð¸Ñ†Ðµ â€œÐšÐ¾ÑÐ¼Ð¾Ñâ€ Ð²ÑÐµÐ¼ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð°Ð¼ ÐºÐ¾Ð¼Ð½Ð°Ñ‚ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸Ð¸ â€œÐ‘Ð¸Ð·Ð½ÐµÑâ€, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð·Ð°ÑÐµÐ»Ð¸Ð»Ð¸ÑÑŒ 10 Ð¼Ð°Ñ.
 UPDATE room_in_booking 
 SET checkout_date = DATEADD(day, 2, checkout_date)
 FROM room
@@ -80,11 +80,11 @@ INNER JOIN room_in_booking ON room.id_room = room_in_booking.id_room
 INNER JOIN hotel ON room.id_hotel = hotel.id_hotel
 INNER JOIN room_category ON room.id_room_category = room_category.id_room_category
 WHERE
-	hotel.name = N'Êîñìîñ' AND
-	room_category.name = N'Áèçíåñ' AND
+	hotel.name = N'ÐšÐ¾ÑÐ¼Ð¾Ñ' AND
+	room_category.name = N'Ð‘Ð¸Ð·Ð½ÐµÑ' AND
 	room_in_booking.checkin_date = N'2019-05-10' 
 
---7. Íàéòè âñå "ïåðåñåêàþùèåñÿ" âàðèàíòû ïðîæèâàíèÿ.
+--7. ÐÐ°Ð¹Ñ‚Ð¸ Ð²ÑÐµ "Ð¿ÐµÑ€ÐµÑÐµÐºÐ°ÑŽÑ‰Ð¸ÐµÑÑ" Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹ Ð¿Ñ€Ð¾Ð¶Ð¸Ð²Ð°Ð½Ð¸Ñ.
 SELECT *
 FROM room_in_booking b1
 INNER JOIN room_in_booking AS b2 ON b1.id_room = b2.id_room
@@ -92,14 +92,14 @@ WHERE
 	b1.id_room_in_booking != b2.id_room_in_booking AND 
 	b1.checkin_date <= b2.checkin_date AND b2.checkin_date < b1.checkout_date
 
---8. Ñîçäàòü áðîíèðîâàíèå â òðàíçàêöèè.
+--8. Ð¡Ð¾Ð·Ð´Ð°Ñ‚ÑŒ Ð±Ñ€Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð² Ñ‚Ñ€Ð°Ð½Ð·Ð°ÐºÑ†Ð¸Ð¸.
 BEGIN TRANSACTION;  
 	INSERT INTO booking VALUES(1, CONVERT (date, GETDATE()));  	
 	INSERT room_in_booking VALUES (2003, 11, N'2019-10-10', N'2019-10-20')
 ROLLBACK;  
 
 
--- 9. Äîáàâèòü íåîáõîäèìûå èíäåêñû äëÿ âñåõ òàáëèö
+-- 9. Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð¸Ð½Ð´ÐµÐºÑÑ‹ Ð´Ð»Ñ Ð²ÑÐµÑ… Ñ‚Ð°Ð±Ð»Ð¸Ñ†
 CREATE NONCLUSTERED INDEX [IX_booking_id_client] ON booking
 (
 	id_client ASC

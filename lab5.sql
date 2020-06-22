@@ -40,11 +40,11 @@ WHERE company.name = N'Фарма' AND production.id_production NOT IN (
 	)
 
 -- 4 Дать минимальный и максимальный баллы лекарств каждой фирмы, которая оформила не менее 120 заказов.
-SELECT company.name, MIN(production.rating) AS min_rating, MAX(production.rating) AS max_rating
+SELECT company.id_company, company.name, MIN(production.rating) AS min_rating, MAX(production.rating) AS max_rating
 FROM production
 INNER JOIN [order] ON [order].id_production = production.id_production
 INNER JOIN company ON company.id_company = production.id_company
-GROUP BY company.name
+GROUP BY company.id_company, company.name
 HAVING COUNT(id_order) >= 120
 
 -- 5 Дать списки сделавших заказы аптек по всем дилерам компании “AstraZeneca”. 
