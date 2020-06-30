@@ -31,8 +31,8 @@ GO
 SELECT * 
 FROM students_marks
 
--- 3 Дать информацию о должниках с указанием фамилии студента и названия предмета. Должниками считаются студенты, не имеющие оценки по предмету,
---   который ведется в группе. Оформить в виде процедуры, на входе идентификатор группы.
+
+-- 3 Дать информацию о должниках с указанием фамилии студента и названия предмета. Должниками считаются студенты, не имеющие оценки по предмету, который ведется в группе. Оформить в виде процедуры, на входе идентификатор группы.
 
 CREATE PROCEDURE get_debtor 
 	@id_group AS INT
@@ -50,6 +50,7 @@ GO
 
 EXECUTE get_debtor @id_group = 1
 
+
 -- 4 Дать среднюю оценку студентов по каждому предмету для тех предметов, по которым занимается не менее 35 студентов.
 SELECT subject.name, AVG(mark.mark) AS average_mark
 FROM mark
@@ -58,6 +59,8 @@ INNER JOIN subject ON subject.id_subject = lesson.id_subject
 INNER JOIN student ON mark.id_student = student.id_student
 GROUP BY subject.name
 HAVING COUNT(DISTINCT student.id_student) >= 35
+
+
 
 -- 5 Дать оценки студентов специальности ВМ по всем проводимым предметам с указанием группы, фамилии, предмета, даты. 
 --   При отсутствии оценки заполнить значениями NULL поля оценки.
@@ -70,6 +73,7 @@ LEFT JOIN mark ON mark.id_lesson = lesson.id_lesson AND mark.id_student = studen
 LEFT JOIN subject ON subject.id_subject = lesson.id_subject
 WHERE [group].name = N'ВМ'
 
+
 -- 6 Всем студентам специальности ПС, получившим оценки меньшие 5 по предмету БД до 12.05, повысить эти оценки на 1 балл.
 
 UPDATE mark
@@ -78,48 +82,65 @@ FROM mark
 INNER JOIN lesson ON lesson.id_lesson = mark.id_lesson
 INNER JOIN [group] ON [group].id_group = lesson.id_group
 INNER JOIN subject ON subject.id_subject = lesson.id_subject
-WHERE (subject.name = N'БД' AND mark.mark < 5 AND lesson.date < N'2019-05-12' AND [group].name = N'ПС')
+WHERE 
+	subject.name = N'БД' AND 
+	mark.mark < 5 AND 
+	lesson.date < N'2019-05-12' AND 
+	[group].name = N'ПС'
+
 
 -- 7 Добавить необходимые индексы.
+CREATE NONCLUSTERED INDEX [IX_subject_name] ON subject  
+(
+	name ASC
+)
 
-CREATE NONCLUSTERED INDEX [IX_group_name] ON [group]
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_subject_name] ON subject
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_student_name] ON student
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_student_id_group] ON student
-(
-	id_group ASC
-)
-CREATE NONCLUSTERED INDEX [IX_lesson_date] ON lesson
-(
-	date ASC
-)
-CREATE NONCLUSTERED INDEX [IX_lesson_id_subject] ON lesson
+CREATE NONCLUSTERED INDEX [IX_lesson_id_subject] ON lesson 
 (
 	id_subject ASC
 )
-CREATE NONCLUSTERED INDEX [IX_lesson_id_group] ON lesson
+
+CREATE NONCLUSTERED INDEX [IX_student_id_group-id_student] ON student
 (
-	id_group ASC
-)
-CREATE NONCLUSTERED INDEX [IX_mark_mark] ON mark
-(
-	mark ASC
-)
-CREATE NONCLUSTERED INDEX [IX_mark_id_student] ON mark
-(
+	id_group ASC,
 	id_student ASC
 )
-CREATE NONCLUSTERED INDEX [IX_mark_id_lesson] ON mark
+INCLUDE(name)
+
+CREATE NONCLUSTERED INDEX [IX_subject_id_subject] ON subject	
 (
-	id_lesson ASC
+	id_subject ASC
+)
+INCLUDE(name)
+
+CREATE NONCLUSTERED INDEX [IX_mark_id_lesson-id_student] ON mark	
+(
+	id_lesson ASC,
+	id_student ASC
+)
+INCLUDE(mark)
+
+CREATE NONCLUSTERED INDEX [IX_group_name-id_group] ON [group]	
+(
+	name ASC,
+	id_group ASC
 )
 
+CREATE NONCLUSTERED INDEX [IX_lesson_id_group-id_subject] ON lesson	
+(
+	id_group ASC,
+	id_subject ASC
+)
+INCLUDE(date)
+
+CREATE NONCLUSTERED INDEX [IX_mark_id_lesson-mark] ON mark	
+(
+	id_lesson ASC,
+	mark ASC
+)
+
+CREATE NONCLUSTERED INDEX [IX_subject_name-include_id_subject] ON subject	
+(
+	name ASC
+)
+INCLUDE(id_subject)

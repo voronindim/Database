@@ -27,6 +27,7 @@ INNER JOIN pharmacy ON pharmacy.id_pharmacy = [order].id_pharmacy
 INNER JOIN medicine ON medicine.id_medicine = production.id_medicine
 WHERE medicine.name = N'Кордерон' AND company.name = N'Аргус'
 
+
 -- 3 Дать список лекарств компании “Фарма”, на которые не были сделаны заказы до 25 января.
 SELECT DISTINCT medicine.name
 FROM medicine
@@ -39,6 +40,7 @@ WHERE company.name = N'Фарма' AND production.id_production NOT IN (
 		WHERE [order].date < N'2019-01-25'
 	)
 
+
 -- 4 Дать минимальный и максимальный баллы лекарств каждой фирмы, которая оформила не менее 120 заказов.
 SELECT company.id_company, company.name, MIN(production.rating) AS min_rating, MAX(production.rating) AS max_rating
 FROM production
@@ -46,6 +48,7 @@ INNER JOIN [order] ON [order].id_production = production.id_production
 INNER JOIN company ON company.id_company = production.id_company
 GROUP BY company.id_company, company.name
 HAVING COUNT(id_order) >= 120
+
 
 -- 5 Дать списки сделавших заказы аптек по всем дилерам компании “AstraZeneca”. 
 --   Если у дилера нет заказов, в названии аптеки проставить NULL.
@@ -55,6 +58,7 @@ LEFT JOIN company ON company.id_company = dealer.id_company
 LEFT JOIN [order] ON [order].id_dealer = dealer.id_dealer
 LEFT JOIN pharmacy ON pharmacy.id_pharmacy = [order].id_pharmacy
 WHERE company.name = N'AstraZeneca'
+
 
 -- 6 Уменьшить на 20% стоимость всех лекарств, если она превышает 3000, а длительность лечения не более 7 дней.
 UPDATE production
@@ -66,53 +70,74 @@ WHERE production.price > 3000 AND production.id_medicine IN
 		WHERE medicine.cure_duration <= 7
 	)
 
+
 -- 7 Добавить необходимые индексы.
-CREATE NONCLUSTERED INDEX [IX_medicine_name] ON medicine
+CREATE NONCLUSTERED INDEX [IX_medicine_name-id_medicine] ON medicine
 (
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_pharmacy_name] ON pharmacy
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_company_name] ON company
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_dealer_name] ON dealer
-(
-	name ASC
-)
-CREATE NONCLUSTERED INDEX [IX_dealer_id_company] ON dealer
-(
-	id_company ASC
-)
-CREATE NONCLUSTERED INDEX [IX_order_date-quantity] ON [order]
-(
-	date ASC,
-	quantity ASC
-)
-CREATE NONCLUSTERED INDEX [IX_order_id_production] ON [order]
-(
-	id_production ASC
-)
-CREATE NONCLUSTERED INDEX [IX_order_id_dealer] ON [order]
-(
-	id_dealer ASC
-)
-CREATE NONCLUSTERED INDEX [IX_production_id_medicine] ON production
-(
+	name ASC,
 	id_medicine ASC
 )
-CREATE NONCLUSTERED INDEX [IX_production_id_company] ON production
+CREATE NONCLUSTERED INDEX [IX_production_id_medicine-id_company-id_production] ON production
 (
+	id_medicine ASC,
+	id_company ASC,
+	id_production ASC
+)
+CREATE NONCLUSTERED INDEX [IX_company_name-id_company] ON company 
+(
+	name ASC,
 	id_company ASC
 )
-CREATE NONCLUSTERED INDEX [IX_production_rating] ON production
+CREATE NONCLUSTERED INDEX [IX_order_id_production-id_pharmacy] ON [order]
 (
-	rating ASC
+	id_production ASC,
+	id_pharmacy ASC
 )
-CREATE NONCLUSTERED INDEX [IX_production_price] ON production
+INCLUDE(date, quantity)
+
+CREATE NONCLUSTERED INDEX [IX_pharmacy_id_pharmacy] ON pharmacy
 (
+	id_pharmacy ASC
+)
+INCLUDE(name)
+
+
+CREATE NONCLUSTERED INDEX [IX_order_id_production-date] ON [order]
+(
+	id_production ASC,
+	date ASC
+)
+
+
+CREATE NONCLUSTERED INDEX [IX_production_id_production-id_company] ON production
+(
+	id_production ASC,
+	id_company ASC
+)
+INCLUDE(rating)
+
+
+CREATE NONCLUSTERED INDEX [IX_dealer_id_company-id_dealer] ON dealer
+(
+	id_company ASC,
+	id_dealer ASC	
+)
+INCLUDE(name)
+
+CREATE NONCLUSTERED INDEX [IX_order_id_dealer-id_pharmacy] ON [order]
+(
+	id_dealer ASC,
+	id_pharmacy ASC
+)
+
+
+CREATE NONCLUSTERED INDEX [IX_production_id_medicine-price] ON production
+(
+	id_medicine ASC,
 	price ASC
 )
+CREATE NONCLUSTERED INDEX [IX_medicine_cure_duration] ON medicine
+(
+	cure_duration ASC
+)
+INCLUDE(id_medicine)
