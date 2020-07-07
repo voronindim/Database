@@ -53,13 +53,13 @@ EXECUTE get_debtor @id_group = 1
 
 -- 4 Дать среднюю оценку студентов по каждому предмету для тех предметов, по которым занимается не менее 35 студентов.
 SELECT subject.name, AVG(mark.mark) AS average_mark
-FROM mark
-INNER JOIN lesson ON lesson.id_lesson = mark.id_lesson
-INNER JOIN subject ON subject.id_subject = lesson.id_subject
-INNER JOIN student ON mark.id_student = student.id_student
+FROM subject
+INNER JOIN lesson ON subject.id_subject = lesson.id_subject
+INNER JOIN [group] ON [group].id_group = lesson.id_group
+INNER JOIN student ON [group].id_group = student.id_group
+INNER JOIN mark ON mark.id_lesson = lesson.id_lesson
 GROUP BY subject.name
 HAVING COUNT(DISTINCT student.id_student) >= 35
-
 
 
 -- 5 Дать оценки студентов специальности ВМ по всем проводимым предметам с указанием группы, фамилии, предмета, даты. 
